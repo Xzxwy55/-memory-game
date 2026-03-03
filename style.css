@@ -1,0 +1,104 @@
+body {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    background-color: black;
+    color: white;
+}
+
+.game-board {
+    margin: 20px auto;
+    width: 600px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.card {
+    width: 120px;
+    height: 120px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+}
+
+.card-front {
+    background: purple;
+}
+
+.card-back {
+    background: red;
+}
+
+.card .card-back {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.card.flipped .card-front {
+    opacity: 0;
+}
+
+.card.flipped .card-back {
+    opacity: 1;
+}
+
+.matched {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.matched .card-back {
+    opacity: 0.5;
+}
+
+/* Анимации для появления карт (можно оставить или убрать) */
+@keyframes dealCard {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) translateY(-100px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes matchSuccess {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+        filter: brightness(1.3);
+    }
+}
+
+@keyframes winPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+        filter: brightness(1.5);
+    }
+}
