@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    const symbols = ["🕷️","🦈","🦖","🐊","🐸","🐭","🐙","🦁"];
+    const symbols = ["🕷️","🦈","🦖","🐊","🐸","🐭","🐙","🦁","🐱‍👤","🐱‍👓"];
 
     let firstCard = null;
     let secondCard = null;
@@ -110,5 +110,6 @@ $(document).ready(function () {
             finishGame();
         }
     });
+
 
 });
