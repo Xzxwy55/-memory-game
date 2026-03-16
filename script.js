@@ -1,6 +1,68 @@
+(function() {
+    let timerInterval = null;
+    let timerValue = 0;
+    let currentRecord = localStorage.getItem('memoryGameRecord') ? parseFloat(localStorage.getItem('memoryGameRecord')) : Infinity;
+    
+    function formatTimer(sec) {
+        return sec.toFixed(1);
+    }
+
+    function updateRecordDisplay() {
+        if (currentRecord === Infinity) {
+            $('#recordDisplay').text('—');
+        } else {
+            $('#recordDisplay').text(formatTimer(currentRecord) + 'с');
+        }
+    }
+
+    function startTimer() {
+        timerValue = 0;
+        $('#timerDisplay').text(formatTimer(timerValue));
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(function() {
+            timerValue += 0.1;
+            $('#timerDisplay').text(formatTimer(timerValue));
+        }, 100);
+    }
+
+    function stopTimer() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+    }
+
+    function checkAndUpdateRecord() {
+        let finalTime = timerValue;
+        if (finalTime < currentRecord) {
+            currentRecord = finalTime;
+            localStorage.setItem('memoryGameRecord', currentRecord);
+            updateRecordDisplay();
+            $('#recordDisplay').addClass('record-badge');
+            setTimeout(() => $('#recordDisplay').removeClass('record-badge'), 1000);
+            return true;
+        }
+        return false;
+    }
+
+    function resetTimer() {
+        stopTimer();
+        timerValue = 0;
+        $('#timerDisplay').text(formatTimer(timerValue));
+    }
+
+    updateRecordDisplay();
+
+    window.timerModule = {
+        startTimer: startTimer,
+        stopTimer: stopTimer,
+        resetTimer: resetTimer,
+        checkAndUpdateRecord: checkAndUpdateRecord
+    };
+})();
 $(document).ready(function () {
 
-    const symbols = ["🕷️","🦈","🦖","🐊","🐸","🐭","🐙","🦁","🐱‍👤","🐱‍👓"];
+    const symbols = ["🕷️","🦈","🦖","🐊","🐸","🐭","🐙","🦁","🐱‍👤","🐱‍👓","😎","🎁","🗽","🦼","❄",];
 
     let firstCard = null;
     let secondCard = null;
@@ -39,6 +101,11 @@ $(document).ready(function () {
         createBoard();
 
         $("#controlBtn").text("Finish");
+
+        if (window.timerModule) {
+            timerModule.resetTimer();
+            timerModule.startTimer();
+        }
     }
 
     function finishGame() {
@@ -50,6 +117,13 @@ $(document).ready(function () {
 
         gameStarted = false;
         $("#controlBtn").text("Start");
+
+        if (window.timerModule) {
+            if ($(".matched").length === $(".card").length && $(".card").length > 0) {
+                timerModule.checkAndUpdateRecord();
+            }
+            timerModule.stopTimer();
+        }
     }
 
     function resetTurn() {
@@ -110,6 +184,5 @@ $(document).ready(function () {
             finishGame();
         }
     });
-
 
 });
